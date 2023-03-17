@@ -64,3 +64,5 @@ In case you want to use a different database name, follow the next steps:
 
 
 The server will start running at http://localhost:8080.
+
+The API Documentation is running at https://documenter.getpostman.com/view/16566385/2s93JxshKY
