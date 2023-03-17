@@ -12,6 +12,7 @@ import com.mintyn.test.service.OrderService;
 import com.mintyn.test.validation.OrderDtoValidator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,17 +26,17 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductServiceImpl productService;
-    private final KafkaTemplate<String, Order> kafkaTemplate;
     private final ProductRepository productRepository;
     private final OrderDtoValidator orderDtoValidator;
+    private final KafkaTemplate<String, Order> kafkaTemplate;
+    private final String kafkaTopic = "order-topic";
 
     @Autowired
     public OrderServiceImpl(
             OrderRepository orderRepository,
             ProductRepository productRepository,
             ProductServiceImpl productService,
-            OrderDtoValidator orderDtoValidator,
-            KafkaTemplate<String, Order> kafkaTemplate) {
+            OrderDtoValidator orderDtoValidator, KafkaTemplate<String, Order> kafkaTemplate) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.productService = productService;
@@ -62,6 +63,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @KafkaListener(topics = kafkaTopic, groupId = "report_consumer")
     public OrderDto save(OrderDto orderDto) {
         this.orderDtoValidator.validate(orderDto);
         Long productId = orderDto.getProductId();
@@ -76,7 +78,6 @@ public class OrderServiceImpl implements OrderService {
         Order order = this.dtoToEntity(orderDto);
 
         // subscribe order to Kafka
-        String kafkaTopic = "order-topic";
         kafkaTemplate.send(kafkaTopic, order);
         return new OrderDto(this.orderRepository.save(order));
     }

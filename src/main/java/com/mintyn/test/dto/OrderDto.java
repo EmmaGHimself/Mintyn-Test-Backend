@@ -27,5 +27,4 @@ public class OrderDto {
             this.productId = product.getId();
         }
     }
-
 }
