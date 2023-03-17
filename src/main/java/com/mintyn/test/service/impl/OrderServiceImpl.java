@@ -12,7 +12,6 @@ import com.mintyn.test.service.OrderService;
 import com.mintyn.test.validation.OrderDtoValidator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +62,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @KafkaListener(topics = kafkaTopic, groupId = "report_consumer")
     public OrderDto save(OrderDto orderDto) {
         this.orderDtoValidator.validate(orderDto);
         Long productId = orderDto.getProductId();
@@ -105,4 +103,5 @@ public class OrderServiceImpl implements OrderService {
 
         return order;
     }
+
 }
