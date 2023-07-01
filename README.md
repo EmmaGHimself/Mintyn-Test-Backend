@@ -1,4 +1,4 @@
-# Mintyn Test Restful API for Sales/Inventory Management Application
+# Restful API for Sales/Inventory Management Application
 This project built using **Java** and the following tools:
 - [Spring Boot](https://spring.io/projects/spring-boot) as server side framework
 - [Maven](https://maven.apache.org/) as build automation tool
